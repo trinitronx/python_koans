@@ -3,6 +3,17 @@
 
 from runner.koan import *
 
+## This is a class to test the falsiness of __nonzero__()
+class FalseClass:
+  def __nonzero__(self):
+    return False
+## This is a class to test the falsiness of __len__()
+class EmptyClass:
+  def __len__(self):
+    return 0
+## This is a class to provide a constant of false-y things
+class Falseyness:
+  FALSE_THINGS = [ 0, 0L, 0.0, 0j, None, False, '', (), [], {}, FalseClass(), EmptyClass() ]
 
 class AboutAsserts(Koan):
 
@@ -15,13 +26,16 @@ class AboutAsserts(Koan):
         #
         #   http://bit.ly/about_asserts
 
-        self.assertTrue(False)  # This should be true
+        false_things = Falseyness.FALSE_THINGS # [ 0, 0L, 0.0, 0j, None, False, '', (), [], {}, FalseClass(), EmptyClass() ]
+        for thing in false_things:
+          self.assertFalse(thing)  # These things should be false
 
     def test_assert_with_message(self):
         """
         Enlightenment may be more easily achieved with appropriate messages.
         """
-        self.assertTrue(False, "This should be true -- Please fix this")
+        for thing in Falseyness.FALSE_THINGS:
+          self.assertFalse(thing, "This should be false -- Please fix this")
 
     def test_fill_in_values(self):
         """
